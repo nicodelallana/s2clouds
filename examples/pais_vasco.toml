@@ -1,0 +1,15 @@
+# Sentinel-2 scene configuration: Basque Country (País Vasco)
+# Covers Bilbao, Donostia-San Sebastián, Vitoria-Gasteiz and the Cantabrian coastline.
+[scene]
+id = "S2B_30TWN_20230831_0_L2A"
+collection = "sentinel-2-l2a"
+stac_url = "https://earth-search.aws.element84.com/v1"
+datetime = "2023-08-31"
+
+[roi]
+# Bounding box in EPSG:4326: [min_lon, min_lat, max_lon, max_lat]
+# From Gran Bilbao to Donostia-San Sebastián, and from Vitoria-Gasteiz to the Cantabrian Sea
+bbox = [-3.00, 42.80, -1.90, 43.40]
+
+[bands]
+names = ["B02", "B03", "B04"]
