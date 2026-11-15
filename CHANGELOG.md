@@ -8,6 +8,8 @@ y el proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ## [Unreleased]
 
 ### Added
+- Módulo `disparity.py` para cálculo de disparidad subpíxel en ventanas con correlación de fase (`skimage.registration.phase_cross_correlation`) y apodización Tukey.
+- Tests de precisión subpíxel sobre datos sintéticos y test de estabilidad bajo jitter de ventana.
 - Módulo de geometría orbital `geometry.py`: cálculo del ángulo de escaneo `phi` (ec. 4 Krauß 2021), ángulo de rotación para alineación vertical y funciones de rotación/desrotación de rásteres.
 - Tests de verificación para `phi` a 43.3° N (Bilbao, 101.9°) y 50.11° N (Frankfurt, 103.5°).
 - Script de exploración y figuras de paralaje (`notebooks/01_exploracion_paralaje.py`, `docs/img/cantabrico_rgb_parallax.png`, `docs/img/cantabrico_cloud_fringe_zoom.png`) mostrando el desplazamiento cromático en bordes de nube.
