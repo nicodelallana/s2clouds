@@ -8,6 +8,8 @@ y el proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ## [Unreleased]
 
 ### Added
+- Módulo `wind.py` para desacople de advección (viento) y corrección de alturas usando velocidad transversal y disparidad en sombras.
+- Tests unitarios en `tests/test_wind.py` verificando el benchmark de Krauß (2021) de 10 m/s (~1 px / ~1000 m).
 - Módulo `binet.py` con corrección de retardo inter-banda según altitud orbital instantánea (ec. 12 de Binet et al. 2022).
 - Tests unitarios y documentación en `docs/method.md` comprobando que el cambio en altura es < 2%.
 

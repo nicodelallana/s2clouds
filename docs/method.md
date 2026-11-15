@@ -69,5 +69,15 @@ La órbita de Sentinel-2 oscila en altitud a lo largo de su paso orbital entre $
 
 $$\Delta t_{\text{corregido}} = \Delta t_{\text{ref}} \cdot \left(\frac{H_{\text{sat}}}{H_{\text{sat, ref}}}\right) \cdot \left(\frac{V_{\text{ground, ref}}}{V_{\text{ground}}}\right)$$
 
-Para adquisiciones en el Cantábrico ($H_{\text{sat}} \approx 795\text{ km}$ frente a $786\text{ km}$ de referencia), el ajuste en $\Delta t$ es de aproximadamente $+1.14\%$. Esta corrección induce un cambio en la altura derivada de $\approx 1.13\%$ ($< 2\%$, lo que equivale a $\approx 20\text{ m}$ a $1800\text{ m}$ de altitud).
+## 6. Tratamiento del Viento y Advección (Krauß 2021)
+
+El desplazamiento a lo largo de la órbita mezcla paralaje y advección de la masa de aire:
+$$d_{\text{total, along}} = d_{\text{paralaje}} + d_{\text{viento, along}} = d_{\text{paralaje}} + \frac{v_{\text{viento, along}} \cdot \Delta t}{\rho}$$
+
+Krauß (2021) documenta que una componente de viento de solo $10\text{ m/s}$ a lo largo de la traza agrega $\approx 1\text{ px}$ de sesgo ($\approx 1000\text{ m}$ de error de cota).
+
+`s2clouds` proporciona dos métodos de desacople:
+1. **Componente transversal libre de paralaje**: El desplazamiento a través de la traza ($d_{\text{cross}}$) no tiene paralaje geométrico, por lo que permite calcular la componente ortogonal del viento: $v_{\text{viento, cross}} = (d_{\text{cross}} \cdot \rho) / \Delta t$.
+2. **Referencia en sombras terrestres**: La sombra proyectada en el suelo ($h = 0$) tiene paralaje nulo ($d_{\text{paralaje, sombra}} = 0$). Cualquier desplazamiento medido en la sombra corresponde al movimiento de la nube ($d_{\text{sombra}} = d_{\text{viento}}$), permitiendo calcular el paralaje puro restando: $d_{\text{paralaje}} = d_{\text{nube}} - d_{\text{sombra}}$.
+
 
