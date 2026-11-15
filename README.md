@@ -240,25 +240,25 @@ $$
 
 Para medir desplazamientos con resolución subpíxel sin interpolar imágenes pesadas en el dominio espacial, se implementa el algoritmo de **Manuel Guizar-Sicairos, Samuel T. Thurman & James R. Fienup (2008)**.
 
-Dadas dos ventanas espectrales $f_1(x, y)$ y $f_2(x, y)$, se aplica primero una ventana de apodización de **Tukey 2D** (coseno afusilado con parámetro $\alpha = 0.2$) para evitar artefactos espectrales en los bordes:
+Dadas dos ventanas espectrales $f_{1}(x, y)$ y $f_{2}(x, y)$, se aplica primero una ventana de apodización de **Tukey 2D** (coseno afusilado con parámetro $\alpha = 0.2$) para evitar artefactos espectrales en los bordes:
 
 $$
 w(n) = \begin{cases}
-\frac{1}{2}\left[1 + \cos\left(\frac{2\pi}{\alpha}\left(n - \frac{\alpha}{2}\right)\right)\right], & 0 \le n < \frac{\alpha N}{2} \\
+\frac{1}{2}\left[1 + \cos\left(\frac{2\pi}{\alpha}\left(n - \frac{\alpha N}{2}\right)\right)\right], & 0 \le n \lt \frac{\alpha N}{2} \\
 1, & \frac{\alpha N}{2} \le n \le N\left(1 - \frac{\alpha}{2}\right) \\
-\frac{1}{2}\left[1 + \cos\left(\frac{2\pi}{\alpha}\left(n - 1 + \frac{\alpha}{2}\right)\right)\right], & N\left(1 - \frac{\alpha}{2}\right) < n \le N
+\frac{1}{2}\left[1 + \cos\left(\frac{2\pi}{\alpha}\left(n - 1 + \frac{\alpha}{2}\right)\right)\right], & N\left(1 - \frac{\alpha}{2}\right) \lt n \le N
 \end{cases}
 $$
 
 Se calculan las Transformadas Discretas de Fourier 2D de cada ventana, obteniendo los espectros $\mathcal{F}_{1}(u, v)$ y $\mathcal{F}_{2}(u, v)$. La correlación cruzada normalizada de fase viene dada por:
 
 $$
-R(u, v) = \frac{\mathcal{F}_{1}(u, v) \cdot {\mathcal{F}_{2}}^{*}(u, v)}{\left| \mathcal{F}_{1}(u, v) \cdot {\mathcal{F}_{2}}^{*}(u, v) \right|}
+R(u, v) = \frac{\mathcal{F}_{1}(u, v) \cdot \mathcal{F}_{2}^{\ast}(u, v)}{\left| \mathcal{F}_{1}(u, v) \cdot \mathcal{F}_{2}^{\ast}(u, v) \right|}
 $$
 
-Donde ${\mathcal{F}_{2}}^{*}$ denota el complejo conjugado del espectro de Fourier de la segunda banda.
+Donde $\mathcal{F}_{2}^{\ast}$ denota el complejo conjugado del espectro de Fourier de la segunda banda.
 
-El pico de la transformada inversa $\mathcal{F}^{-1}\{R(u, v)\}$ determina el desplazamiento entero, y la fase local alrededor del pico se resuelve mediante una DFT matricial sobre-muestreada (*upsampling factor* $\kappa = 100$), logrando una precisión analítica de $\pm 0.05\text{ px}$.
+El pico de la transformada inversa $\mathcal{F}^{-1}[R(u, v)]$ determina el desplazamiento entero, y la fase local alrededor del pico se resuelve mediante una DFT matricial sobre-muestreada (factor de sobremuestreo $\kappa = 100$), logrando una precisión analítica de $\pm 0.05\text{ px}$.
 
 ---
 
