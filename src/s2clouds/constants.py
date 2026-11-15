@@ -32,9 +32,6 @@ BAND_PAIRS_DELTA_T_S: Final[dict[tuple[str, str], float]] = {
     ("B03", "B04"): 0.478,
 }
 
-# Convenience re-export from heights module
-from s2clouds.heights import height_from_disparity  # noqa: E402
-
 __all__ = [
     "ORBIT_ALTITUDE_M",
     "ORBIT_VELOCITY_M_S",
@@ -45,5 +42,4 @@ __all__ = [
     "DELTA_T_B03_S",
     "DELTA_T_B04_S",
     "BAND_PAIRS_DELTA_T_S",
-    "height_from_disparity",
 ]

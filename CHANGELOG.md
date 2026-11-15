@@ -5,6 +5,15 @@ Todos los cambios notables en este proyecto serán documentados en este archivo.
 Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/),
 y el proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+- Funciones `compute_disparity_grid` y `generate_cloud_mask` en `disparity.py`.
+- Función `compute_cloud_height_map` en `heights.py` para generación de mapas de altura densos con enmascaramiento estricto de nubes y desrotación a coordenadas originales.
+- Subcomando CLI `s2clouds heightmap`.
+- Figura del mapa de alturas en escena del Cantábrico en `docs/img/cantabrico_cloud_height_map.png`.
+- Tests unitarios en `tests/test_height_map.py`.
+
 ## [0.1.0] - 2026-11-15
 
 ### Added
