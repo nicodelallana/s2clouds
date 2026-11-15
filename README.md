@@ -177,15 +177,25 @@ El desarrollo se gestiona siguiendo de forma rigurosa la metodología **Git Flow
 
 Los satélites Sentinel-2 se encuentran en una órbita heliosíncrona cuasi-polar retrógrada con una inclinación nominal de $i = 98.62^\circ$. Debido a la rotación de la Tierra bajo el satélite, la trayectoria sobre el terreno no sigue el meridiano norte-sur estricto, sino que forma un ángulo de rumbo de escaneo $\phi$ dependiente de la latitud geodésica $\lambda$:
 
-$$\cos(\phi) = \frac{\cos(i)}{\cos(\lambda)}$$
+$$
+\cos(\phi) = \frac{\cos(i)}{\cos(\lambda)}
+$$
 
 Para alinear el eje de escaneo orbital exactamente con las columnas verticales de la matriz de imagen, se aplica una rotación de ángulo $\theta_{\text{rot}}$:
 
-$$\theta_{\text{rot}} = 90^\circ - \phi$$
+$$
+\theta_{\text{rot}} = 90^\circ - \phi
+$$
 
 *Ejemplo*: Para la costa del País Vasco ($\lambda \approx 43.3^\circ\text{ N}$):
-$$\cos(\phi) = \frac{\cos(98.62^\circ)}{\cos(43.3^\circ)} = \frac{-0.14986}{0.72777} \approx -0.20592 \implies \phi \approx 101.88^\circ$$
-$$\theta_{\text{rot}} = 90^\circ - 101.88^\circ = -11.88^\circ$$
+
+$$
+\cos(\phi) = \frac{\cos(98.62^\circ)}{\cos(43.3^\circ)} = \frac{-0.14986}{0.72777} \approx -0.20592 \implies \phi \approx 101.88^\circ
+$$
+
+$$
+\theta_{\text{rot}} = 90^\circ - 101.88^\circ = -11.88^\circ
+$$
 
 ---
 
@@ -193,23 +203,36 @@ $$\theta_{\text{rot}} = 90^\circ - 101.88^\circ = -11.88^\circ$$
 
 La relación geométrica entre la disparidad observada en píxeles ($d$) y la altura real de la nube sobre el suelo ($h$) viene dada por la semejanza de triángulos en la proyección ortográfica del plano focal:
 
-$$h = \frac{|d| \cdot \rho \cdot h_o}{v_o \cdot \Delta t}$$
+$$
+h = \frac{|d| \cdot \rho \cdot h_{o}}{v_{o} \cdot \Delta t}
+$$
 
 Donde:
 * $h$: Altura de la nube sobre el suelo en metros ($\text{m}$).
 * $d$: Disparidad medida a lo largo de las columnas tras rotar la imagen ($\text{px}$).
 * $\rho = 10\text{ m/px}$: Tamaño del píxel en el terreno para las bandas visibles de Sentinel-2.
-* $h_o = 786\,000\text{ m}$: Altitud orbital media de la plataforma Sentinel-2.
-* $v_o = 7\,429\text{ m/s}$: Velocidad orbital lineal del satélite respecto al centro terrestre ($v_o = \sqrt{G M_{\oplus} / R_{\text{orb}}}$).
+* $h_{o} = 786\,000\text{ m}$: Altitud orbital media de la plataforma Sentinel-2.
+* $v_{o} = 7\,429\text{ m/s}$: Velocidad orbital lineal del satélite respecto al centro terrestre ($v_{o} = \sqrt{G M_{\oplus} / R_{\text{orb}}}$).
 * $\Delta t$: Intervalo de tiempo transcurrido entre la toma de las dos bandas espectrales ($\text{s}$).
 
 #### Factores de escala física resultantes:
 * Par **$\text{B02}-\text{B04}$** ($\Delta t = 1.005\text{ s}$):
-  $$\text{Factor} = \frac{10 \cdot 786\,000}{7\,429 \cdot 1.005} \approx \mathbf{1\,052.7\text{ m/px}}$$
+
+$$
+\text{Factor} = \frac{10 \cdot 786\,000}{7\,429 \cdot 1.005} \approx \mathbf{1\,052.7\text{ m/px}}
+$$
+
 * Par **$\text{B02}-\text{B03}$** ($\Delta t = 0.527\text{ s}$):
-  $$\text{Factor} = \frac{10 \cdot 786\,000}{7\,429 \cdot 0.527} \approx \mathbf{2\,007.6\text{ m/px}}$$
+
+$$
+\text{Factor} = \frac{10 \cdot 786\,000}{7\,429 \cdot 0.527} \approx \mathbf{2\,007.6\text{ m/px}}
+$$
+
 * Par **$\text{B03}-\text{B04}$** ($\Delta t = 0.478\text{ s}$):
-  $$\text{Factor} = \frac{10 \cdot 786\,000}{7\,429 \cdot 0.478} \approx \mathbf{2\,213.4\text{ m/px}}$$
+
+$$
+\text{Factor} = \frac{10 \cdot 786\,000}{7\,429 \cdot 0.478} \approx \mathbf{2\,213.4\text{ m/px}}
+$$
 
 ---
 
@@ -219,15 +242,21 @@ Para medir desplazamientos con resolución subpíxel sin interpolar imágenes pe
 
 Dadas dos ventanas espectrales $f_1(x, y)$ y $f_2(x, y)$, se aplica primero una ventana de apodización de **Tukey 2D** (coseno afusilado con parámetro $\alpha = 0.2$) para evitar artefactos espectrales en los bordes:
 
-$$w(n) = \begin{cases}
+$$
+w(n) = \begin{cases}
 \frac{1}{2}\left[1 + \cos\left(\frac{2\pi}{\alpha}\left(n - \frac{\alpha}{2}\right)\right)\right], & 0 \le n < \frac{\alpha N}{2} \\
 1, & \frac{\alpha N}{2} \le n \le N\left(1 - \frac{\alpha}{2}\right) \\
 \frac{1}{2}\left[1 + \cos\left(\frac{2\pi}{\alpha}\left(n - 1 + \frac{\alpha}{2}\right)\right)\right], & N\left(1 - \frac{\alpha}{2}\right) < n \le N
-\end{cases}$$
+\end{cases}
+$$
 
-Se calculan las Transformadas Discreta de Fourier 2D $\mathcal{F}_1(u, v)$ y $\mathcal{F}_2(u, v)$. La correlación cruzada normalizada de fase viene dada por:
+Se calculan las Transformadas Discretas de Fourier 2D de cada ventana, obteniendo los espectros $\mathcal{F}_{1}(u, v)$ y $\mathcal{F}_{2}(u, v)$. La correlación cruzada normalizada de fase viene dada por:
 
-$$R(u, v) = \frac{\mathcal{F}_1(u, v) \cdot \mathcal{F}_2^*(u, v)}{\left|\mathcal{F}_1(u, v) \cdot \mathcal{F}_2^*(u, v)\right|}$$
+$$
+R(u, v) = \frac{\mathcal{F}_{1}(u, v) \cdot {\mathcal{F}_{2}}^{*}(u, v)}{\left| \mathcal{F}_{1}(u, v) \cdot {\mathcal{F}_{2}}^{*}(u, v) \right|}
+$$
+
+Donde ${\mathcal{F}_{2}}^{*}$ denota el complejo conjugado del espectro de Fourier de la segunda banda.
 
 El pico de la transformada inversa $\mathcal{F}^{-1}\{R(u, v)\}$ determina el desplazamiento entero, y la fase local alrededor del pico se resuelve mediante una DFT matricial sobre-muestreada (*upsampling factor* $\kappa = 100$), logrando una precisión analítica de $\pm 0.05\text{ px}$.
 
@@ -235,23 +264,37 @@ El pico de la transformada inversa $\mathcal{F}^{-1}\{R(u, v)\}$ determina el de
 
 ### 3.4 Propagación Analítica de Incertidumbres
 
-Asumiendo errores aleatorios no correlacionados en la estimación de disparidad ($\sigma_d \approx 0.1\text{ px}$) y en la estabilidad del retardo inter-banda ($\sigma_{\Delta t} / \Delta t \approx 1\%$), la varianza de la altura se propaga linealmente según el estándar GUM (*Guide to the Expression of Uncertainty in Measurement*):
+Asumiendo errores aleatorios no correlacionados en la estimación de disparidad ($\sigma_{d} \approx 0.1\text{ px}$) y en la estabilidad del retardo inter-banda ($\sigma_{\Delta t} / \Delta t \approx 1\%$), la varianza de la altura se propaga linealmente según el estándar GUM (*Guide to the Expression of Uncertainty in Measurement*):
 
-$$\sigma_h = \sqrt{ \left(\frac{\partial h}{\partial d}\right)^2 \sigma_d^2 + \left(\frac{\partial h}{\partial \Delta t}\right)^2 \sigma_{\Delta t}^2 }$$
+$$
+\sigma_{h} = \sqrt{ \left(\frac{\partial h}{\partial d}\right)^2 \sigma_{d}^2 + \left(\frac{\partial h}{\partial \Delta t}\right)^2 \sigma_{\Delta t}^2 }
+$$
 
 Calculando las derivadas parciales de la ec. 6:
-$$\frac{\partial h}{\partial d} = \frac{\rho \cdot h_o}{v_o \cdot \Delta t}$$
-$$\frac{\partial h}{\partial \Delta t} = - \frac{|d| \cdot \rho \cdot h_o}{v_o \cdot (\Delta t)^2} = - \frac{h}{\Delta t}$$
+
+$$
+\frac{\partial h}{\partial d} = \frac{\rho \cdot h_{o}}{v_{o} \cdot \Delta t}
+$$
+
+$$
+\frac{\partial h}{\partial \Delta t} = - \frac{|d| \cdot \rho \cdot h_{o}}{v_{o} \cdot (\Delta t)^2} = - \frac{h}{\Delta t}
+$$
 
 Sustituyendo:
-$$\sigma_h = \sqrt{ \left( \frac{\rho \cdot h_o}{v_o \cdot \Delta t} \right)^2 \sigma_d^2 + \left( \frac{h}{\Delta t} \right)^2 \sigma_{\Delta t}^2 }$$
+
+$$
+\sigma_{h} = \sqrt{ \left( \frac{\rho \cdot h_{o}}{v_{o} \cdot \Delta t} \right)^2 \sigma_{d}^2 + \left( \frac{h}{\Delta t} \right)^2 \sigma_{\Delta t}^2 }
+$$
 
 *Intervalos de confianza reportados por el modelo:*
-* **68% de confianza (1$\sigma$)**: $[h - \sigma_h, \, h + \sigma_h]$
-* **95% de confianza (2$\sigma$)**: $[h - 2\sigma_h, \, h + 2\sigma_h]$
+* **68% de confianza (1$\sigma$)**: $[h - \sigma_{h}, \, h + \sigma_{h}]$
+* **95% de confianza (2$\sigma$)**: $[h - 2\sigma_{h}, \, h + 2\sigma_{h}]$
 
 Para una nube baja de $200\text{ m}$ con el par B02-B04, la incertidumbre analítica resulta:
-$$\sigma_h \approx \sqrt{(1052.7 \cdot 0.1)^2 + (200 \cdot 0.01)^2} = \sqrt{11082 + 4} \approx \mathbf{\pm 105.3\text{ m}}$$
+
+$$
+\sigma_{h} \approx \sqrt{(1052.7 \cdot 0.1)^2 + (200 \cdot 0.01)^2} = \sqrt{11082 + 4} \approx \mathbf{\pm 105.3\text{ m}}
+$$
 
 ---
 
@@ -260,7 +303,11 @@ $$\sigma_h \approx \sqrt{(1052.7 \cdot 0.1)^2 + (200 \cdot 0.01)^2} = \sqrt{1108
 Para eliminar valores espurios y minimizar el ruido en el producto final:
 1. Se calculan de forma concurrente los tres mapas de elevación: $h_{02-04}$, $h_{02-03}$ y $h_{03-04}$.
 2. **Filtrado de coherencia triangular**: Se calcula la media local $\mu$ y desviación típica $\sigma$ entre los 3 pares. Se descartan aquellos píxeles con una discrepancia superior a:
-   $$|h_i - \mu| > 0.25 \cdot \sigma$$
+
+$$
+|h_{i} - \mu| > 0.25 \cdot \sigma
+$$
+
 3. **Apertura morfológica en niveles de gris (`grey_opening`)**: Se aplica un elemento estructurante plano de $5 \times 5$ píxeles para eliminar picos de ruido impulsivo sin degradar las fronteras exteriores del manto nuboso.
 4. **Convolución gaussiana normalizada**: Suavizado espacial continuo mediante un kernel gaussiano con $\sigma_{\text{gauss}} = 1.0$, ponderado por la máscara de datos válidos para evitar sesgos en las discontinuidades.
 
@@ -270,12 +317,17 @@ Para eliminar valores espurios y minimizar el ruido en el producto final:
 
 El modelo clásico de Krauß (2021) asume una altitud orbital y velocidad constantes en el elipsoide de referencia. Binet et al. (2022) demostraron que la altura del objeto $h$ altera ligeramente el tiempo de vuelo efectivo del frente de onda entre detectores:
 
-$$\Delta t_{\text{eff}}(h) = \Delta t_0 \cdot \left(1 - \frac{h}{h_o}\right)$$
+$$
+\Delta t_{\text{eff}}(h) = \Delta t_{0} \cdot \left(1 - \frac{h}{h_{o}}\right)
+$$
 
 La altura corregida se obtiene resolviendo la relación implícita:
-$$h_{\text{corregida}} = \frac{|d| \cdot \rho \cdot h_o}{v_o \cdot \Delta t_0 \cdot \left(1 - \frac{h_{\text{inicial}}}{h_o}\right)}$$
 
-Dado que para nubes troposféricas $h \le 12\,000\text{ m}$ y $h_o = 786\,000\text{ m}$, el cociente $h/h_o < 0.015$, introduciendo un ajuste fino de entre el **$0.2\%$ y el $1.5\%$** que se aplica automáticamente en `s2clouds`.
+$$
+h_{\text{corregida}} = \frac{|d| \cdot \rho \cdot h_{o}}{v_{o} \cdot \Delta t_{0} \cdot \left(1 - \frac{h_{\text{inicial}}}{h_{o}}\right)}
+$$
+
+Dado que para nubes troposféricas $h \le 12\,000\text{ m}$ y $h_{o} = 786\,000\text{ m}$, el cociente $h/h_{o} < 0.015$, introduciendo un ajuste fino de entre el **$0.2\%$ y el $1.5\%$** que se aplica automáticamente en `s2clouds`.
 
 ---
 
@@ -283,12 +335,17 @@ Dado que para nubes troposféricas $h \le 12\,000\text{ m}$ y $h_o = 786\,000\te
 
 Para validar de forma independiente las alturas de paralaje sin recurrir a datos externos de radar o LIDAR, se utiliza la sombra proyectada por la nube en el terreno.
 
-Conociendo el ángulo cenital solar $s_z$ (extraído directamente de los metadatos STAC/MTD de Sentinel-2) y la distancia aparente proyectada entre el borde de la nube y el borde de su sombra $d_{\text{sombra}}$ a lo largo del acimut solar $\phi_{\text{solar}}$:
+Conociendo el ángulo cenital solar $s_{z}$ (extraído directamente de los metadatos STAC/MTD de Sentinel-2) y la distancia aparente proyectada entre el borde de la nube y el borde de su sombra $d_{\text{sombra}}$ a lo largo del acimut solar $\phi_{\text{solar}}$:
 
-$$h_{\text{sombra}} = \frac{d_{\text{sombra}}}{\tan(s_z)}$$
+$$
+h_{\text{sombra}} = \frac{d_{\text{sombra}}}{\tan(s_{z})}
+$$
 
 Si el terreno subyacente presenta una elevación topográfica $z_{\text{DEM}}$:
-$$h_{\text{absoluta}} = \frac{d_{\text{sombra}}}{\tan(s_z)} + z_{\text{DEM}}$$
+
+$$
+h_{\text{absoluta}} = \frac{d_{\text{sombra}}}{\tan(s_{z})} + z_{\text{DEM}}
+$$
 
 ---
 
