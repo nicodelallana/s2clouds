@@ -8,6 +8,8 @@ y el proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ## [Unreleased]
 
 ### Added
+- Función `propagate_height_uncertainty` y estructura de datos `CloudHeightResult` con intervalos de confianza al 68% y 95% para propagación analítica de incertidumbres en disparidad y retardos de banda.
+- Tests unitarios de propagación de incertidumbre y verificación del rango de alturas en nubes bajas (0 a 3 km).
 - Módulo `disparity.py` para cálculo de disparidad subpíxel en ventanas con correlación de fase (`skimage.registration.phase_cross_correlation`) y apodización Tukey.
 - Tests de precisión subpíxel sobre datos sintéticos y test de estabilidad bajo jitter de ventana.
 - Módulo de geometría orbital `geometry.py`: cálculo del ángulo de escaneo `phi` (ec. 4 Krauß 2021), ángulo de rotación para alineación vertical y funciones de rotación/desrotación de rásteres.
