@@ -8,6 +8,9 @@ y el proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ## [Unreleased]
 
 ### Added
+- Módulo `validation.py` con validación geométrica nube-sombra (ec. 7-8 Krauß 2021) y cálculo del vector de proyección de sombra.
+- Resultados de validación empírica en escena real de Bilbao anotados en `docs/validation.md` (discrepancia de 4.1 m entre paralaje y sombra).
+- Tests para cálculo solar y validación nube-sombra en `tests/test_validation.py`.
 - Función `propagate_height_uncertainty` y estructura de datos `CloudHeightResult` con intervalos de confianza al 68% y 95% para propagación analítica de incertidumbres en disparidad y retardos de banda.
 - Tests unitarios de propagación de incertidumbre y verificación del rango de alturas en nubes bajas (0 a 3 km).
 - Módulo `disparity.py` para cálculo de disparidad subpíxel en ventanas con correlación de fase (`skimage.registration.phase_cross_correlation`) y apodización Tukey.
