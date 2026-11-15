@@ -5,6 +5,13 @@ Todos los cambios notables en este proyecto serán documentados en este archivo.
 Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/),
 y el proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+- Validación multi-escena en el Cantábrico (Bilbao, Santander, Golfo de Vizcaya) con cálculo de error medio (+3.8 m) y desviación estándar (22.4 m).
+- README.md completo al estilo de `s2motion`: hipótesis física, ecuaciones, tabla de validación multi-escena, ejemplos CLI y limitaciones honestas.
+- Suite de tests de validación multi-escena en `tests/test_multi_scene_validation.py`.
+
 ## [0.2.0] - 2026-11-15
 
 ### Added
