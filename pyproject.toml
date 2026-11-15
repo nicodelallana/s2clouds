@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "s2clouds"
-version = "1.0.0"
+version = "1.1.0"
 description = "Cloud height estimation from Sentinel-2 inter-band parallax, validated with cloud-shadow geometry"
 readme = "README.md"
 requires-python = ">=3.10"

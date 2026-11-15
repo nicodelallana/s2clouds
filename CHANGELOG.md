@@ -5,13 +5,12 @@ Todos los cambios notables en este proyecto serán documentados en este archivo.
 Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/),
 y el proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [1.1.0] - 2026-11-15
 
 ### Added
-- Módulo `wind.py` para desacople de advección (viento) y corrección de alturas usando velocidad transversal y disparidad en sombras.
-- Tests unitarios en `tests/test_wind.py` verificando el benchmark de Krauß (2021) de 10 m/s (~1 px / ~1000 m).
 - Módulo `binet.py` con corrección de retardo inter-banda según altitud orbital instantánea (ec. 12 de Binet et al. 2022).
-- Tests unitarios y documentación en `docs/method.md` comprobando que el cambio en altura es < 2%.
+- Módulo `wind.py` para desacople de advección nubosa y corrección de paralaje a partir de velocidades transversales y sombras terrestres (Krauß 2021).
+- Suites de tests en `tests/test_binet.py` y `tests/test_wind.py`.
 
 ## [1.0.0] - 2026-11-15
 
