@@ -1,0 +1,14 @@
+# Sentinel-2 cloud parallax scene configuration: Bilbao coast (Cantabrian Sea)
+[scene]
+id = "S2B_30TWN_20230831_0_L2A"
+collection = "sentinel-2-l2a"
+stac_url = "https://earth-search.aws.element84.com/v1"
+datetime = "2023-08-31"
+
+[roi]
+# Bounding box in EPSG:4326: [min_lon, min_lat, max_lon, max_lat]
+# Coastal clouds over Bilbao Abra and Gulf of Biscay
+bbox = [-3.15, 43.30, -3.00, 43.42]
+
+[bands]
+names = ["B02", "B03", "B04"]

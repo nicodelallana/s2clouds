@@ -43,11 +43,11 @@ env/
 htmlcov/
 
 # Project data and heavy outputs (as specified in plan section 8.5)
-data/
-outputs/
+/data/
+/outputs/
 *.tif
 *.tiff
 *.nc
 *.h5
-!tests/data/*.tif
-!tests/data/*.tiff
+!/tests/data/*.tif
+!/tests/data/*.tiff
