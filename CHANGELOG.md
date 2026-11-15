@@ -5,20 +5,16 @@ Todos los cambios notables en este proyecto serán documentados en este archivo.
 Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/),
 y el proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.2.0] - 2026-11-15
 
 ### Added
-- Módulo `fusion.py` para fusión multiespectral de los 3 pares de bandas ((B02,B03), (B02,B04), (B03,B04)).
-- Filtrado de consistencia según criterio de Krauß (2021) de 0.25σ.
-- Denoising mediante apertura morfológica 5x5 y convolución gaussiana normalizada (σ = 1.0).
-- Soporte para `--pair fuse` en CLI `s2clouds heightmap`.
-- Figura comparativa de los tres pares y mapa fusionado en `docs/img/cantabrico_three_pairs_fusion.png`.
-- Tests unitarios en `tests/test_fusion.py` demostrando reducción de ruido en el mapa fusionado.
-- Funciones `compute_disparity_grid` y `generate_cloud_mask` en `disparity.py`.
-- Función `compute_cloud_height_map` en `heights.py` para generación de mapas de altura densos con enmascaramiento estricto de nubes y desrotación a coordenadas originales.
-- Subcomando CLI `s2clouds heightmap`.
-- Figura del mapa de alturas en escena del Cantábrico en `docs/img/cantabrico_cloud_height_map.png`.
-- Tests unitarios en `tests/test_height_map.py`.
+- Malla de correlación subpíxel (`compute_disparity_grid`) y máscara de nubes adaptativa (`generate_cloud_mask`).
+- Generación de mapas densos de altura de nubes (`compute_cloud_height_map`) con desrotación espacial a coordenadas geográficas.
+- Fusión multiespectral de los 3 pares de bandas ((B02,B03), (B02,B04), (B03,B04)) en `fusion.py` siguiendo a Krauß (2021).
+- Filtrado de consistencia estadística inter-pares (umbral 0.25σ) y post-procesamiento morfológico (apertura 5x5 + suavizado gaussiano).
+- Subcomando CLI `s2clouds heightmap` con opciones de selección de par individual o `--pair fuse`.
+- Figuras de validación cartográfica (`cantabrico_cloud_height_map.png` y `cantabrico_three_pairs_fusion.png`).
+- Verificación empírica de reducción de ruido en mapa fusionado.
 
 ## [0.1.0] - 2026-11-15
 
