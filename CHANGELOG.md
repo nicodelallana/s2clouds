@@ -8,6 +8,12 @@ y el proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ## [Unreleased]
 
 ### Added
+- Módulo `fusion.py` para fusión multiespectral de los 3 pares de bandas ((B02,B03), (B02,B04), (B03,B04)).
+- Filtrado de consistencia según criterio de Krauß (2021) de 0.25σ.
+- Denoising mediante apertura morfológica 5x5 y convolución gaussiana normalizada (σ = 1.0).
+- Soporte para `--pair fuse` en CLI `s2clouds heightmap`.
+- Figura comparativa de los tres pares y mapa fusionado en `docs/img/cantabrico_three_pairs_fusion.png`.
+- Tests unitarios en `tests/test_fusion.py` demostrando reducción de ruido en el mapa fusionado.
 - Funciones `compute_disparity_grid` y `generate_cloud_mask` en `disparity.py`.
 - Función `compute_cloud_height_map` en `heights.py` para generación de mapas de altura densos con enmascaramiento estricto de nubes y desrotación a coordenadas originales.
 - Subcomando CLI `s2clouds heightmap`.

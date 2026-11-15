@@ -9,6 +9,7 @@ import numpy as np
 import rasterio
 
 from s2clouds import __version__
+from s2clouds.fusion import fuse_three_band_pairs
 from s2clouds.heights import compute_cloud_height_map
 from s2clouds.io_stac import (
     crop_scene_bands,
@@ -73,9 +74,9 @@ def create_parser() -> argparse.ArgumentParser:
     )
     hmap_parser.add_argument(
         "--pair",
-        choices=["B02-B04", "B02-B03", "B03-B04"],
-        default="B02-B04",
-        help="Sentinel-2 band pair to correlate",
+        choices=["B02-B04", "B02-B03", "B03-B04", "fuse"],
+        default="fuse",
+        help="Sentinel-2 band pair to correlate, or 'fuse' for multi-pair fusion",
     )
     hmap_parser.add_argument(
         "--step",
@@ -122,17 +123,27 @@ def handle_heightmap(args: argparse.Namespace) -> int:
     # Approximate scene center latitude from affine transform or default
     lat_center = 43.36
 
-    b1, b2 = args.pair.split("-")
-    band_pair = (b1, b2)
-
-    print(f"Computing cloud height map using pair {band_pair}...")
-    height_map = compute_cloud_height_map(
-        multiband_crop=data,
-        latitude_deg=lat_center,
-        band_pair=band_pair,
-        step_px=args.step,
-        window_size=args.window,
-    )
+    if args.pair == "fuse":
+        print("Computing and fusing height maps from all 3 visible band pairs (Krauß 2021)...")
+        height_map, _ = fuse_three_band_pairs(
+            multiband_crop=data,
+            latitude_deg=lat_center,
+            step_px=args.step,
+            window_size=args.window,
+        )
+        band_desc = "Fused Cloud height [m] (B02-B03, B02-B04, B03-B04)"
+    else:
+        b1, b2 = args.pair.split("-")
+        band_pair = (b1, b2)
+        print(f"Computing cloud height map using pair {band_pair}...")
+        height_map = compute_cloud_height_map(
+            multiband_crop=data,
+            latitude_deg=lat_center,
+            band_pair=band_pair,
+            step_px=args.step,
+            window_size=args.window,
+        )
+        band_desc = f"Cloud height [m] ({args.pair})"
 
     args.output.parent.mkdir(parents=True, exist_ok=True)
     meta = {
@@ -149,7 +160,7 @@ def handle_heightmap(args: argparse.Namespace) -> int:
 
     with rasterio.open(args.output, "w", **meta) as dst:
         dst.write(height_map.astype(np.float32), 1)
-        dst.set_band_description(1, f"Cloud height [m] ({args.pair})")
+        dst.set_band_description(1, band_desc)
         dst.update_tags(**tags)
 
     print(f"Saved height map to {args.output}")
