@@ -8,6 +8,7 @@ y el proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ## [Unreleased]
 
 ### Added
+- Script de exploración y figuras de paralaje (`notebooks/01_exploracion_paralaje.py`, `docs/img/cantabrico_rgb_parallax.png`, `docs/img/cantabrico_cloud_fringe_zoom.png`) mostrando el desplazamiento cromático en bordes de nube.
 - Módulo `io_stac` para consulta en STAC (Earth Search) y descarga de recortes en ventana COG con `rasterio`.
 - Configuración de escena de ejemplo `examples/bilbao_clouds.toml`.
 - Subcomando CLI `s2clouds download` para reproducción de recortes.
