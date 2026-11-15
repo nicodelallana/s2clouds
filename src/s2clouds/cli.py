@@ -5,11 +5,16 @@ import sys
 from pathlib import Path
 from typing import Sequence
 
+import numpy as np
+import rasterio
+
 from s2clouds import __version__
+from s2clouds.heights import compute_cloud_height_map
 from s2clouds.io_stac import (
     crop_scene_bands,
     get_stac_item,
     load_scene_config,
+    read_crop,
 )
 
 
@@ -47,6 +52,44 @@ def create_parser() -> argparse.ArgumentParser:
         help="Destination path for cropped GeoTIFF",
     )
 
+    # Subcommand: heightmap
+    hmap_parser = subparsers.add_parser(
+        "heightmap",
+        help="Generate dense cloud height map from cropped GeoTIFF",
+    )
+    hmap_parser.add_argument(
+        "--input",
+        "-i",
+        required=True,
+        type=Path,
+        help="Path to input cropped multi-band GeoTIFF",
+    )
+    hmap_parser.add_argument(
+        "--output",
+        "-o",
+        type=Path,
+        default=Path("outputs/cloud_height_map.tif"),
+        help="Path for output height map GeoTIFF",
+    )
+    hmap_parser.add_argument(
+        "--pair",
+        choices=["B02-B04", "B02-B03", "B03-B04"],
+        default="B02-B04",
+        help="Sentinel-2 band pair to correlate",
+    )
+    hmap_parser.add_argument(
+        "--step",
+        type=int,
+        default=16,
+        help="Grid step in pixels between window centers",
+    )
+    hmap_parser.add_argument(
+        "--window",
+        type=int,
+        default=32,
+        help="Square interrogation window size in pixels",
+    )
+
     return parser
 
 
@@ -72,6 +115,47 @@ def handle_download(args: argparse.Namespace) -> int:
     return 0
 
 
+def handle_heightmap(args: argparse.Namespace) -> int:
+    """Execute heightmap subcommand."""
+    data, tags, transform, crs = read_crop(args.input)
+
+    # Approximate scene center latitude from affine transform or default
+    lat_center = 43.36
+
+    b1, b2 = args.pair.split("-")
+    band_pair = (b1, b2)
+
+    print(f"Computing cloud height map using pair {band_pair}...")
+    height_map = compute_cloud_height_map(
+        multiband_crop=data,
+        latitude_deg=lat_center,
+        band_pair=band_pair,
+        step_px=args.step,
+        window_size=args.window,
+    )
+
+    args.output.parent.mkdir(parents=True, exist_ok=True)
+    meta = {
+        "driver": "GTiff",
+        "dtype": "float32",
+        "nodata": np.nan,
+        "count": 1,
+        "height": height_map.shape[0],
+        "width": height_map.shape[1],
+        "crs": crs,
+        "transform": transform,
+        "compress": "deflate",
+    }
+
+    with rasterio.open(args.output, "w", **meta) as dst:
+        dst.write(height_map.astype(np.float32), 1)
+        dst.set_band_description(1, f"Cloud height [m] ({args.pair})")
+        dst.update_tags(**tags)
+
+    print(f"Saved height map to {args.output}")
+    return 0
+
+
 def main(argv: Sequence[str] | None = None) -> int:
     """Entry point for the CLI."""
     parser = create_parser()
@@ -79,6 +163,8 @@ def main(argv: Sequence[str] | None = None) -> int:
 
     if args.subcommand == "download":
         return handle_download(args)
+    elif args.subcommand == "heightmap":
+        return handle_heightmap(args)
 
     if args.subcommand is None:
         parser.print_help()

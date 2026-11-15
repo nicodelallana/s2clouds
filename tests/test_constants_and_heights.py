@@ -13,8 +13,8 @@ from s2clouds.constants import (
     ORBIT_INCLINATION_DEG,
     ORBIT_VELOCITY_M_S,
     PIXEL_RESOLUTION_M,
-    height_from_disparity,
 )
+from s2clouds.heights import height_from_disparity
 
 
 def test_sentinel2_constants_values():
