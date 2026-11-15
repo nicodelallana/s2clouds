@@ -63,6 +63,11 @@ A partir de la distancia horizontal proyectada $d_{\text{sombra}}$ entre el cent
 
 $$\tan(s_z) = \frac{d_{\text{sombra}}}{h_s}$$
 
-$$h_c = \frac{d_{\text{sombra}}}{\tan(s_z)} + H_s - H_c$$
+## 5. Corrección de Retardos de Binet et al. (2022, ec. 12)
 
-Donde $H_s$ y $H_c$ son las cotas topográficas del suelo bajo la sombra y bajo la nube.
+La órbita de Sentinel-2 oscila en altitud a lo largo de su paso orbital entre $\approx 788\text{ km}$ y $818\text{ km}$. La variación de la velocidad del subpunto satelital en tierra y de la escala focal induce una pequeña variación en el retardo entre bandas:
+
+$$\Delta t_{\text{corregido}} = \Delta t_{\text{ref}} \cdot \left(\frac{H_{\text{sat}}}{H_{\text{sat, ref}}}\right) \cdot \left(\frac{V_{\text{ground, ref}}}{V_{\text{ground}}}\right)$$
+
+Para adquisiciones en el Cantábrico ($H_{\text{sat}} \approx 795\text{ km}$ frente a $786\text{ km}$ de referencia), el ajuste en $\Delta t$ es de aproximadamente $+1.14\%$. Esta corrección induce un cambio en la altura derivada de $\approx 1.13\%$ ($< 2\%$, lo que equivale a $\approx 20\text{ m}$ a $1800\text{ m}$ de altitud).
+
