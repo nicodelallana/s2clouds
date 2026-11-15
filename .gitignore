@@ -1,0 +1,53 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+
+# IDE & editors
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Pytest & linting
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Project data and heavy outputs (as specified in plan section 8.5)
+data/
+outputs/
+*.tif
+*.tiff
+*.nc
+*.h5
+!tests/data/*.tif
+!tests/data/*.tiff
